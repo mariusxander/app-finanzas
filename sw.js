@@ -1,11 +1,11 @@
-const CACHE_NAME = 'mis-finanzas-v8';
+const CACHE_NAME = 'mis-finanzas-v9';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/icon.svg'
+  './',
+  './index.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
+  './icon.svg'
 ];
 
 self.addEventListener('install', event => {
