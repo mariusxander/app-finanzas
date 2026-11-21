@@ -1,10 +1,10 @@
 {
-  "id": "/",
+  "id": "./",
   "name": "Mis Finanzas",
   "short_name": "Mis Finanzas",
   "description": "Control personal de ingresos, egresos, cuentas y ahorros",
-  "start_url": "/index.html",
-  "scope": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#F1F3F8",
