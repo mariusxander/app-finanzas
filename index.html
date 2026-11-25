@@ -941,9 +941,13 @@ function invEntitiesAgg(){
     const nm=(x.entity||'Sin nombre').trim();
     const k=cat+'::'+nm.toLowerCase();
     let e=m.get(k);
-    if(!e) e={cat:cat,name:nm,invested:0,returned:0,active:0,profit:0,lastDate:'',lastProfitDate:'',n:0,profitCount:0};
+    if(!e) e={cat:cat,name:nm,invested:0,returned:0,active:0,profit:0,expectedInterest:0,lastDate:'',lastProfitDate:'',n:0,profitCount:0};
     const amt=Number(x.amount)||0;
-    if(x.action==='out'){e.invested+=amt;e.active+=amt;}
+    if(x.action==='out'){
+      e.invested+=amt;
+      e.active+=amt;
+      if(cat==='loan'&&Number(x.expectedInterest)>0) e.expectedInterest+=Number(x.expectedInterest);
+    }
     else if(x.action==='return'){e.returned+=amt;e.active-=amt;}
     else if(x.action==='profit'){
       e.profit+=amt;e.profitCount++;
@@ -954,7 +958,11 @@ function invEntitiesAgg(){
     e.n++;
     m.set(k,e);
   });
-  return Array.from(m.values()).sort(function(a,b){return b.active-a.active||b.profit-a.profit;});
+  return Array.from(m.values()).sort(function(a,b){
+    const pa=(a.active>0.005?a.active:0)+Math.max(0,a.expectedInterest-a.profit);
+    const pb=(b.active>0.005?b.active:0)+Math.max(0,b.expectedInterest-b.profit);
+    return pb-pa||b.profit-a.profit;
+  });
 }
 
 function invEntitySuggestions(cat){
@@ -1020,9 +1028,10 @@ function invListHtml(){
     const dotC=x.action==='profit'?'var(--save)':(x.action==='return'?'var(--inc)':'var(--need)');
     const isGain=x.action==='profit'||x.action==='return';
     const signStr=x.action==='out'?'−':'+';
+    const expTxt=(x.action==='out'&&x.expectedInterest>0)?' · Int. acordado '+money(x.expectedInterest):'';
     h+='<button type="button" class="mv" data-a="edit-inv" data-id="'+esc(x.id)+'"><span class="dot" style="background:'+dotC+'"></span>'+
       '<span><span class="mv-title">'+esc(x.entity)+' <em>· '+esc(invActionLabel(x))+'</em></span>'+
-      '<span class="mv-meta">'+esc(shortDate(x.date))+' · '+esc(invRouteLabel(x))+(x.note?' · '+esc(x.note):'')+'</span></span>'+
+      '<span class="mv-meta">'+esc(shortDate(x.date))+' · '+esc(invRouteLabel(x))+esc(expTxt)+(x.note?' · '+esc(x.note):'')+'</span></span>'+
       '<span class="mv-amt num '+(isGain?'in':'')+'">'+signStr+money(x.amount)+'</span></button>';
   });
   return h;
@@ -1033,6 +1042,7 @@ function viewInv(){
   const loans=ents.filter(function(e){return e.cat==='loan';});
   const invs=ents.filter(function(e){return e.cat==='invest';});
   const totalLoanActive=loans.reduce(function(s,e){return s+e.active;},0);
+  const totalPendingInt=loans.reduce(function(s,e){return s+Math.max(0,e.expectedInterest-e.profit);},0);
   const totalInvOnlyActive=invs.reduce(function(s,e){return s+e.active;},0);
   const totalInvestedAll=ents.reduce(function(s,e){return s+e.invested;},0);
   const mk=curMonth();
@@ -1044,7 +1054,7 @@ function viewInv(){
     '<div class="hero-num num">'+money(S.totalInvActive)+'</div>'+
     '<p class="muted">Patrimonio total sumando cuentas, ahorros e inversiones: <b class="num">'+money(S.totalCash+S.totalSav+S.totalInvActive)+'</b>.</p></div>'+
     '<dl class="stats">'+
-    '<div class="stat"><dt><span class="dot" style="background:var(--want)"></span>Préstamos por cobrar</dt><dd class="num">'+money(totalLoanActive)+'</dd></div>'+
+    '<div class="stat"><dt><span class="dot" style="background:var(--want)"></span>Préstamos por cobrar</dt><dd class="num">'+money(totalLoanActive)+'</dd>'+(totalPendingInt>0.005?'<span class="delta">+'+money(totalPendingInt)+' interés pend.</span>':'')+'</div>'+
     '<div class="stat"><dt><span class="dot" style="background:var(--need)"></span>Capital invertido</dt><dd class="num">'+money(totalInvOnlyActive)+'</dd></div>'+
     '<div class="stat"><dt><span class="dot" style="background:var(--save)"></span>Dividendos / Ganancias</dt><dd class="num">'+money(S.totalInvProfit)+'</dd>'+(monthProfit>0?'<span class="delta good">+'+money(monthProfit)+' este mes</span>':'')+'</div>'+
     '<div class="stat"><dt>Retorno acumulado</dt><dd class="num">'+(totalInvestedAll>0?pct(S.totalInvProfit/totalInvestedAll):'0%')+'</dd></div></dl></section>';
@@ -1057,15 +1067,32 @@ function viewInv(){
   h+='<div><div class="sec-head"><h2>Préstamos personales</h2><button type="button" class="btn small" data-a="quick-inv" data-cat="loan" data-act="out" data-ent="">'+ICON.plus+'Nuevo préstamo</button></div>';
   if(loans.length){
     h+='<div class="inv-grid">'+loans.map(function(e){
-      const done=e.active<=0.005;
-      const recPct=e.invested>0?Math.min(100,Math.max(0,(e.returned/e.invested)*100)):0;
-      return '<article class="inv-card"><header><h3>'+esc(e.name)+'</h3><span class="tag '+(done?'ok':'warn')+'">'+(done?'Liquidado':'Por cobrar')+'</span></header>'+
-        '<div class="acc-bal num">'+money(e.active)+'</div>'+
-        '<div class="hint">Prestado: <b class="num">'+money(e.invested)+'</b> · Recuperado: <b class="num">'+money(e.returned)+'</b>'+(e.profit>0?' · Intereses: <b class="num">'+money(e.profit)+'</b>':'')+'</div>'+
+      const capActive=Math.round(e.active*100)/100;
+      const pendingInt=Math.max(0,Math.round((e.expectedInterest-e.profit)*100)/100);
+      const onlyIntLeft=capActive<=0.005&&pendingInt>0.005;
+      const done=capActive<=0.005&&pendingInt<=0.005;
+      const totalExp=e.invested+e.expectedInterest;
+      const totalCol=e.returned+Math.min(e.profit,e.expectedInterest);
+      const recPct=totalExp>0?Math.min(100,Math.max(0,(totalCol/totalExp)*100)):0;
+      const badgeCls=done?'ok':'warn';
+      const badgeTxt=done?'Liquidado':(onlyIntLeft?'Falta interés':'Por cobrar');
+      const mainVal=onlyIntLeft?pendingInt:capActive;
+      let acts='<button type="button" class="btn small" data-a="quick-inv" data-cat="loan" data-act="out" data-ent="'+esc(e.name)+'">+ Prestar</button>';
+      if(onlyIntLeft){
+        acts+='<button type="button" class="btn small primary" data-a="quick-inv" data-cat="loan" data-act="profit" data-ent="'+esc(e.name)+'" data-amt="'+pendingInt+'">💵 Cobrar interés</button>';
+      } else if(pendingInt>0.005){
+        acts+='<button type="button" class="btn small primary" data-a="quick-inv" data-cat="loan" data-act="return" data-ent="'+esc(e.name)+'" data-amt="'+(capActive>0?capActive:'')+'">✓ Capital</button>';
+        acts+='<button type="button" class="btn small" data-a="quick-inv" data-cat="loan" data-act="profit" data-ent="'+esc(e.name)+'" data-amt="'+pendingInt+'">💵 Interés</button>';
+      } else {
+        acts+='<button type="button" class="btn small primary" data-a="quick-inv" data-cat="loan" data-act="return" data-ent="'+esc(e.name)+'" data-amt="'+(capActive>0?capActive:'')+'">✓ Cobrar pago</button>';
+      }
+      return '<article class="inv-card"><header><h3>'+esc(e.name)+'</h3><span class="tag '+badgeCls+'">'+badgeTxt+'</span></header>'+
+        '<div class="acc-bal num">'+money(mainVal)+(onlyIntLeft?' <span class="hint" style="font-size:12px;font-weight:500">interés pend.</span>':'')+'</div>'+
+        '<div class="hint">Prestado: <b class="num">'+money(e.invested)+'</b> · Capital cobrado: <b class="num">'+money(e.returned)+'</b></div>'+
+        (e.expectedInterest>0||e.profit>0?'<div class="hint">'+(e.expectedInterest>0?'Interés acordado: <b class="num">'+money(e.expectedInterest)+'</b> · ':'')+'Cobrado: <b class="num" style="color:var(--good-text)">'+money(e.profit)+'</b>'+(pendingInt>0.005?' · Falta: <b class="num">'+money(pendingInt)+'</b>':'')+'</div>':'')+
         '<div class="bud"><span>Recuperado '+Math.round(recPct)+'%</span><span class="meter"><i style="width:'+recPct.toFixed(1)+'%"></i></span></div>'+
         '<div class="hint">Último mov: '+esc(shortDate(e.lastDate))+'</div>'+
-        '<div class="inv-acts"><button type="button" class="btn small" data-a="quick-inv" data-cat="loan" data-act="out" data-ent="'+esc(e.name)+'">+ Prestar</button>'+
-        '<button type="button" class="btn small primary" data-a="quick-inv" data-cat="loan" data-act="return" data-ent="'+esc(e.name)+'">✓ Cobrar pago</button></div></article>';
+        '<div class="inv-acts">'+acts+'</div></article>';
     }).join('')+'</div>';
   } else {
     h+='<section class="card"><p class="muted" style="margin-bottom:12px">Aún no registras préstamos aquí. Empieza en un clic con tus contactos frecuentes:</p>'+
@@ -1097,12 +1124,10 @@ function viewInv(){
   }
   h+='</div>';
 
-  // Gráfico de dividendos
   if(S.inv.length){
     h+='<section class="card chart"><div class="sec-head"><h2>Dividendos y ganancias (últimos 6 meses)</h2><span class="muted num">'+money(S.totalInvProfit)+' total</span></div>'+chartInvProfits()+'</section>';
   }
 
-  // Historial filtrable
   const f=S.invFilters;
   const fBtn=function(v,l){return '<button type="button" data-a="flt-inv-cat" data-v="'+v+'" aria-pressed="'+(f.cat===v)+'">'+l+'</button>';};
   const entNames=Array.from(new Map(S.inv.map(function(x){const n=(x.entity||'').trim();return [n.toLowerCase(),n];})).entries());
@@ -1305,6 +1330,7 @@ function invFormHtml(v){
       '<datalist id="inv-ents">'+sugs.map(function(n){return '<option value="'+esc(n)+'">';}).join('')+'</datalist></div>'+
     '<div class="row2"><div class="field"><label for="inv-amt">Monto (S/)</label><input id="inv-amt" inputmode="decimal" placeholder="0.00" value="'+esc(v.amt)+'"></div>'+
     '<div class="field"><label for="inv-date">Fecha</label><input id="inv-date" type="date" value="'+esc(v.date)+'"></div></div>'+
+    (isLoan&&isOut?'<div class="field"><label for="inv-exp-int">Interés acordado (S/, opcional)</label><input id="inv-exp-int" inputmode="decimal" placeholder="Ej. 40.00 (vacío si es sin interés)" value="'+esc(v.expInt)+'"><span class="hint">La tarjeta no pasará a Liquidado hasta que cobres el capital y este interés.</span></div>':'')+
     '<div class="field"><label for="inv-src">'+srcLbl+'</label><select id="inv-src">'+
       srcOpts.map(function(o){return '<option value="'+o[0]+'"'+(v.src===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div>'+
     (v.src==='sav'?('<div class="field"><label for="inv-sav">'+(isOut?'Lugar de Ahorros de origen':'Lugar de Ahorros destino')+'</label><input id="inv-sav" list="inv-savs" maxlength="60" placeholder="Ej. Cuenta de ahorros BCP" value="'+esc(v.savPlace)+'"><datalist id="inv-savs">'+places.map(function(p){return '<option value="'+esc(p.name)+'">';}).join('')+'</datalist></div>'):'')+
@@ -1324,6 +1350,7 @@ function invValues(){
     entity: g('inv-ent'),
     amt: g('inv-amt'),
     date: g('inv-date')||todayStr(),
+    expInt: g('inv-exp-int'),
     src: g('inv-src')||'sav',
     savPlace: g('inv-sav')||(placesAgg()[0]||{}).name||'',
     acc: g('inv-acc')||defaultAcc(),
@@ -1336,9 +1363,9 @@ function openInv(x,preset){
   const pr=preset||{};
   let v;
   if(x){
-    v={cat:x.category||'loan',act:x.action||'out',entity:x.entity||'',amt:String(x.amount),date:x.date,src:x.sourceType||'sav',savPlace:x.savPlace||(placesAgg()[0]||{}).name||'',acc:x.acc||defaultAcc(),note:x.note||''};
+    v={cat:x.category||'loan',act:x.action||'out',entity:x.entity||'',amt:String(x.amount),date:x.date,expInt:x.expectedInterest>0?String(x.expectedInterest):'',src:x.sourceType||'sav',savPlace:x.savPlace||(placesAgg()[0]||{}).name||'',acc:x.acc||defaultAcc(),note:x.note||''};
   } else {
-    v={cat:pr.cat||'loan',act:pr.act||'out',entity:pr.entity||'',amt:pr.amt||'',date:pr.date||todayStr(),src:pr.src||'sav',savPlace:pr.savPlace||(placesAgg()[0]||{}).name||'',acc:pr.acc||defaultAcc(),note:pr.note||''};
+    v={cat:pr.cat||'loan',act:pr.act||'out',entity:pr.entity||'',amt:pr.amt||'',date:pr.date||todayStr(),expInt:pr.expInt||'',src:pr.src||'sav',savPlace:pr.savPlace||(placesAgg()[0]||{}).name||'',acc:pr.acc||defaultAcc(),note:pr.note||''};
   }
   S.sheet={kind:'inv',id:x?x.id:null,ts:x?x.ts:null,convertFromPatId:pr.convertFromPatId||null};
   const title=x?'Editar movimiento':(pr.convertFromPatId?'Convertir retiro a Préstamo / Inv.':(v.act==='out'?'Registrar Préstamo / Inversión':'Registrar Cobro / Dividendo'));
@@ -1353,9 +1380,15 @@ function saveInv(){
   if(!entity)return fail(v.cat==='loan'?'Escribe el nombre de la persona (ej. Alberto, Jeen).':'Escribe el nombre de la empresa o inversión.');
   if(!(amount>0))return fail('Escribe un monto mayor a 0.');
   if(!v.date)return fail('Elige una fecha.');
+  let expInt=0;
+  if(v.cat==='loan'&&v.act==='out'&&v.expInt.trim()){
+    expInt=parseAmount(v.expInt);
+    if(!(expInt>0))return fail('El interés acordado debe ser un número mayor a 0.');
+  }
   if(v.src==='sav'&&!v.savPlace.trim())return fail('Indica el lugar de Ahorros.');
   if(v.src==='acc'&&!v.acc)return fail('Elige una cuenta personal.');
   const doc={k:'inv',category:v.cat,action:v.act,entity:entity,amount:amount,date:v.date,sourceType:v.src,note:v.note.trim(),ts:S.sheet.ts||Date.now()};
+  if(expInt>0) doc.expectedInterest=expInt;
   if(v.src==='sav') doc.savPlace=v.savPlace.trim();
   if(v.src==='acc') doc.acc=v.acc;
   const oldPatId=S.sheet.convertFromPatId;
@@ -1503,7 +1536,7 @@ function buildDemo(){
     const m=shiftMonth(now,p[0]);const day=p[0]===0?Math.min(5,today):5;
     docs.set('p'+i,{k:'pat',date:m+'-'+pad(day),amount:p[2],place:p[1],note:'',ts:2000+i});
   });
-  docs.set('i1',{k:'inv',category:'loan',action:'out',entity:'Alberto',amount:500,date:shiftMonth(now,-1)+'-10',sourceType:'sav',savPlace:'Cuenta de ahorros BCP',note:'Préstamo personal',ts:3001});
+  docs.set('i1',{k:'inv',category:'loan',action:'out',entity:'Alberto',amount:400,expectedInterest:40,date:shiftMonth(now,-1)+'-10',sourceType:'sav',savPlace:'Cuenta de ahorros BCP',note:'Préstamo con interés',ts:3001});
   docs.set('i2',{k:'inv',category:'loan',action:'out',entity:'Jeen',amount:300,date:now+'-03',sourceType:'sav',savPlace:'Cuenta de ahorros BCP',note:'',ts:3002});
   docs.set('i3',{k:'inv',category:'invest',action:'out',entity:'Empresa',amount:1000,date:shiftMonth(now,-2)+'-05',sourceType:'sav',savPlace:'Fondo mutuo',note:'Aporte inicial',ts:3003});
   docs.set('i4',{k:'inv',category:'invest',action:'profit',entity:'Empresa',amount:120,date:shiftMonth(now,-1)+'-28',sourceType:'acc',acc:'bbva',note:'Dividendo mensual',ts:3004});
@@ -1541,7 +1574,7 @@ document.addEventListener('click',function(e){
     case 'new-pat-ret':openPat(null,'ret');break;
     case 'new-inv-out':openInv(null,{cat:'loan',act:'out'});break;
     case 'new-inv-in':openInv(null,{cat:'invest',act:'profit'});break;
-    case 'quick-inv':openInv(null,{cat:el.dataset.cat,act:el.dataset.act,entity:el.dataset.ent});break;
+    case 'quick-inv':openInv(null,{cat:el.dataset.cat,act:el.dataset.act,entity:el.dataset.ent,amt:el.dataset.amt||''});break;
     case 'pat-to-inv':{
       const p=S.pat.find(function(x){return x.id===S.sheet.id;});
       if(p) openInv(null,{convertFromPatId:p.id,cat:'loan',act:'out',amt:String(Math.abs(p.amount)),date:p.date,src:'sav',savPlace:p.place||'',note:p.note||''});
