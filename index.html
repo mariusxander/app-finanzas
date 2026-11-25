@@ -82,15 +82,17 @@ p{margin:0}
 .banner{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--info-soft);border-radius:10px;padding:10px 14px;margin:6px 0 4px}
 .banner.warn{background:var(--warn-soft)}
 .banner.bad{background:var(--bad-soft)}
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
-  padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px))}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  padding:6px max(4px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))}
 .tab{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border-radius:10px;font-size:11px;font-weight:500;color:var(--muted);min-width:0}
-.tab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tab svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .tab[aria-current="page"]{color:var(--ink);background:var(--accent-soft);font-weight:600}
+.t-short{display:none}
+@media (max-width:540px){.t-full{display:none}.t-short{display:inline}.tab{font-size:10px}}
 @media (min-width:760px){
   body{padding-block:0 90px}
-  .tabs{position:static;display:flex;gap:4px;background:none;border:0;border-bottom:1px solid var(--line);padding:0;margin:4px 0 18px}
-  .tab{flex-direction:row;gap:8px;font-size:14px;padding:10px 14px;border-radius:10px 10px 0 0;background:none!important}
+  .tabs{position:static;display:flex;gap:4px;background:none;border:0;border-bottom:1px solid var(--line);padding:0;margin:4px 0 18px;overflow-x:auto}
+  .tab{flex-direction:row;gap:8px;font-size:14px;padding:10px 14px;border-radius:10px 10px 0 0;background:none!important;white-space:nowrap}
   .tab[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--accent)}
 }
 .fab{position:fixed;z-index:26;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(78px + env(safe-area-inset-bottom,0px));
@@ -102,6 +104,7 @@ p{margin:0}
 .fab-split button{border:0;min-height:48px;padding:0 16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
 .fab-split .fab-add{background:var(--accent);color:var(--accent-ink)}
 .fab-split .fab-ret{background:var(--exp);color:#fff}
+.fab-split .fab-gain{background:var(--save);color:#fff}
 .fab-split button:hover{opacity:.92}
 @media (min-width:760px){.fab-split{bottom:calc(24px + env(safe-area-inset-bottom,0px))}}
 @media (max-width:460px){.fab-split{left:16px;right:16px}.fab-split button{flex:1;padding:0 10px;font-size:13px}}
@@ -123,7 +126,7 @@ p{margin:0}
 .icon-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px 36px;align-items:center}
 @media (max-width:760px){.hero{grid-template-columns:minmax(0,1fr)}}
-.hero-num{font-size:48px;line-height:1.05;font-weight:700;letter-spacing:-.03em;margin:6px 0 8px}
+.hero-num{font-size:46px;line-height:1.05;font-weight:700;letter-spacing:-.03em;margin:6px 0 8px}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px;margin:0}
 .stat dt{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
 .stat dd{margin:2px 0 0;font-size:20px;font-weight:600;letter-spacing:-.01em}
@@ -215,6 +218,11 @@ p{margin:0}
 .p-share{display:grid;gap:4px;padding:10px 0;border-top:1px solid var(--line)}
 .p-share:first-child{border-top:0}
 .p-share .bar>i{background:var(--save)}
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.inv-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;min-width:0;align-content:start}
+.inv-card header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.inv-acts{display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;border-top:1px solid var(--line)}
+.inv-acts .btn{flex:1 1 auto;min-height:34px;padding:0 10px;font-size:12px}
 .cp-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
 @media (max-width:760px){.cp-cols{grid-template-columns:minmax(0,1fr)}}
 .cp{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
@@ -265,6 +273,10 @@ input[type=date]{min-width:0}
   <button type="button" class="fab-add" data-a="new-pat-dep">+ Agregar ahorro</button>
   <button type="button" class="fab-ret" data-a="new-pat-ret">− Retirar ahorro</button>
 </div>
+<div class="fab-split" id="fab-inv" hidden>
+  <button type="button" class="fab-add" data-a="new-inv-out">+ Prestar / Invertir</button>
+  <button type="button" class="fab-gain" data-a="new-inv-in">+ Cobro / Dividendo</button>
+</div>
 <div class="overlay" id="overlay" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
     <div class="sheet-head"><h2 id="sheet-title"></h2><button class="icon-btn" type="button" data-a="close" aria-label="Cerrar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -294,6 +306,7 @@ const daysIn=m=>{const p=m.split('-').map(Number);return new Date(p[0],p[1],0).g
 const monthLabel=(m,short)=>{const p=m.split('-').map(Number);const d=new Date(p[0],p[1]-1,1);
   return short?d.toLocaleDateString('es-PE',{month:'short'}).replace('.',''):cap(d.toLocaleDateString('es-PE',{month:'long',year:'numeric'}));};
 const dayLabel=s=>{const p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]).toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long'});};
+const shortDate=s=>{if(!s)return '—';const p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]).toLocaleDateString('es-PE',{day:'numeric',month:'short',year:'numeric'});};
 function money(n,o){o=o||{};const neg=n<-0.005;const a=Math.abs(n);
   const s='S/ '+a.toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2});
   return (neg?'−':(o.sign&&n>0.005?'+':''))+s;}
@@ -338,12 +351,20 @@ const ICON={
   list:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg>',
   wallet:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h12v3M3 7v10a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-1zM16 13.5h2"/></svg>',
   layers:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5zM3 12.5l9 5 9-5M3 16.5l9 5 9-5"/></svg>',
+  trend:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
   sliders:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9M15 4v6M9 14v6"/></svg>',
   pencil:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM13 7l4 4"/></svg>',
   plus:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
   x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'
 };
-const TABS=[['resumen','Resumen',ICON.home],['movs','Movimientos',ICON.list],['cuentas','Cuentas',ICON.wallet],['patrimonio','Ahorros',ICON.layers],['conceptos','Conceptos',ICON.sliders]];
+const TABS=[
+  ['resumen','Resumen','Resumen',ICON.home],
+  ['movs','Movimientos','Movs',ICON.list],
+  ['cuentas','Cuentas','Cuentas',ICON.wallet],
+  ['patrimonio','Ahorros','Ahorros',ICON.layers],
+  ['inversiones','Inversiones','Inversión',ICON.trend],
+  ['conceptos','Conceptos','Conceptos',ICON.sliders]
+];
 const TYPE_LABEL={in:'Ingreso',out:'Egreso',tr:'Transferencia'};
 
 function defaultCfg(){
@@ -378,9 +399,10 @@ function normCfg(raw){
   return c;
 }
 
-const S={tab:'resumen',month:curMonth(),cfg:defaultCfg(),tx:[],pat:[],bal:{},totalCash:0,totalSav:0,
-  filters:{type:'all',acc:'all',cat:'all',q:''},expanded:{},sheet:null,demo:false,demoDocs:null,prefAcc:null};
+const S={tab:'resumen',month:curMonth(),cfg:defaultCfg(),tx:[],pat:[],inv:[],bal:{},totalCash:0,totalSav:0,totalInvActive:0,totalInvProfit:0,
+  filters:{type:'all',acc:'all',cat:'all',q:''},invFilters:{cat:'all',ent:'all'},expanded:{},sheet:null,demo:false,demoDocs:null,prefAcc:null};
 
+/* ================= almacenamiento conectado a Google Sheets con PIN ================= */
 const LS_KEY='misfinanzas.docs.v1',PREF_KEY='misfinanzas.pref.v1',URL_KEY='misfinanzas.url.v1',PIN_KEY='misfinanzas.pin.v1';
 let memUrl='', memPin='';
 function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
@@ -544,18 +566,20 @@ async function initStore(){
   changed();
 }
 
+/* ================= derivados ================= */
 function activeDocs(){return S.demo?S.demoDocs:Store.real;}
 function derive(){
   const docs=activeDocs();
   S.cfg=normCfg(docs.get('cfg'));
-  S.tx=[];S.pat=[];
+  S.tx=[];S.pat=[];S.inv=[];
   docs.forEach(function(d,id){
     if(!d)return;
     if(d.k==='tx')S.tx.push(Object.assign({},d,{id:id}));
     else if(d.k==='pat')S.pat.push(Object.assign({},d,{id:id}));
+    else if(d.k==='inv')S.inv.push(Object.assign({},d,{id:id}));
   });
   const cmp=function(a,b){return a.date<b.date?1:a.date>b.date?-1:(b.ts||0)-(a.ts||0);};
-  S.tx.sort(cmp);S.pat.sort(cmp);
+  S.tx.sort(cmp);S.pat.sort(cmp);S.inv.sort(cmp);
   const b={};S.cfg.accounts.forEach(function(a){b[a.id]=Number(a.initial)||0;});
   S.tx.forEach(function(t){
     if(t.type==='in'){if(b[t.acc]!=null)b[t.acc]+=t.amount;}
@@ -563,9 +587,29 @@ function derive(){
     else if(t.type==='tr'){if(b[t.acc]!=null)b[t.acc]-=t.amount;if(b[t.to]!=null)b[t.to]+=t.amount;}
   });
   S.pat.forEach(function(p){if(p.acc&&b[p.acc]!=null)b[p.acc]-=p.amount;});
+  let invSavDelta=0, invActive=0, invProfit=0;
+  S.inv.forEach(function(x){
+    const amt=Number(x.amount)||0;
+    if(x.action==='out'){
+      invActive+=amt;
+      if(x.sourceType==='acc'&&x.acc&&b[x.acc]!=null) b[x.acc]-=amt;
+      else if(x.sourceType==='sav') invSavDelta-=amt;
+    } else if(x.action==='return'){
+      invActive-=amt;
+      if(x.sourceType==='acc'&&x.acc&&b[x.acc]!=null) b[x.acc]+=amt;
+      else if(x.sourceType==='sav') invSavDelta+=amt;
+    } else if(x.action==='profit'){
+      invProfit+=amt;
+      if(x.sourceType==='reinvest') invActive+=amt;
+      else if(x.sourceType==='acc'&&x.acc&&b[x.acc]!=null) b[x.acc]+=amt;
+      else if(x.sourceType==='sav') invSavDelta+=amt;
+    }
+  });
   S.bal=b;
   S.totalCash=Object.keys(b).reduce(function(s,k){return s+b[k];},0);
-  S.totalSav=S.pat.reduce(function(s,p){return s+p.amount;},0);
+  S.totalSav=S.pat.reduce(function(s,p){return s+p.amount;},0)+invSavDelta;
+  S.totalInvActive=invActive;
+  S.totalInvProfit=invProfit;
 }
 function changed(){derive();renderAll();}
 
@@ -575,6 +619,21 @@ function catName(t){const c=findCat(t.type,t.cat);return c?c.name:(t.catName||'S
 function subName(t){if(!t.sub)return '';const c=findCat(t.type,t.cat);const s=c&&c.subs?c.subs.find(function(x){return x.id===t.sub;}):null;return s?s.name:(t.subName||'');}
 function accName(id){const a=S.cfg.accounts.find(function(x){return x.id===id;});return a?a.name:'Cuenta eliminada';}
 function kindOf(catId){const c=findCat('out',catId);return c?c.kind:'need';}
+
+function savEvents(){
+  const ev=[];
+  S.pat.forEach(function(p){
+    ev.push({id:p.id,kind:'pat',date:p.date,place:p.place||'Sin nombre',amount:p.amount,acc:p.acc||'',note:p.note||'',ts:p.ts||0});
+  });
+  S.inv.forEach(function(x){
+    if(x.sourceType!=='sav')return;
+    const amt=x.action==='out'?-x.amount:x.amount;
+    const tagLbl=x.action==='out'?(x.category==='loan'?'Préstamo a ':'Inversión en ')+x.entity:(x.action==='return'?'Devolución de ':(x.category==='loan'?'Interés de ':'Dividendo de '))+x.entity;
+    ev.push({id:x.id,kind:'inv',date:x.date,place:x.savPlace||'Ahorros',amount:amt,acc:'',invTag:tagLbl,note:x.note||'',ts:x.ts||0});
+  });
+  ev.sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:(b.ts||0)-(a.ts||0);});
+  return ev;
+}
 
 function monthStats(m){
   let inc=0,out=0;const byCat={},byInc={};
@@ -661,7 +720,7 @@ function welcomeHtml(){
 }
 
 function viewResumen(){
-  if(!S.tx.length&&!S.pat.length&&!S.cfg.accounts.some(function(a){return a.initial;}))return welcomeHtml();
+  if(!S.tx.length&&!S.pat.length&&!S.inv.length&&!S.cfg.accounts.some(function(a){return a.initial;}))return welcomeHtml();
   const m=S.month,st=monthStats(m),pv=monthStats(shiftMonth(m,-1));
   const bal=st.inc-st.out,rate=st.inc>0?bal/st.inc:null;
   const dlt=function(cur,pr,upGood){
@@ -678,7 +737,9 @@ function viewResumen(){
     '<div class="stat"><dt><span class="dot" style="background:var(--inc)"></span>Ingresos</dt><dd class="num">'+money(st.inc)+'</dd>'+dlt(st.inc,pv.inc,true)+'</div>'+
     '<div class="stat"><dt><span class="dot" style="background:var(--exp)"></span>Egresos</dt><dd class="num">'+money(st.out)+'</dd>'+dlt(st.out,pv.out,false)+'</div>'+
     '<div class="stat"><dt>Saldo en cuentas</dt><dd class="num">'+money(S.totalCash)+'</dd></div>'+
-    '<div class="stat"><dt>Mis ahorros en total</dt><dd class="num">'+money(S.totalSav)+'</dd></div></dl></section>';
+    '<div class="stat"><dt>Mis ahorros líquidos</dt><dd class="num">'+money(S.totalSav)+'</dd></div>'+
+    (S.inv.length?('<div class="stat"><dt><span class="dot" style="background:var(--need)"></span>Préstamos e inv.</dt><dd class="num">'+money(S.totalInvActive)+'</dd>'+(S.totalInvProfit>0?'<span class="delta good">+'+money(S.totalInvProfit)+' ganados</span>':'')+'</div>'+
+    '<div class="stat"><dt>Patrimonio total</dt><dd class="num">'+money(S.totalCash+S.totalSav+S.totalInvActive)+'</dd></div>'):'')+'</dl></section>';
 
   const ins=insights(m,st,pv);
   if(ins.length){
@@ -819,19 +880,25 @@ function viewCuentas(){
   return h;
 }
 
+/* ================= Ahorros ================= */
 function placesAgg(){
   const m=new Map();
-  S.pat.forEach(function(p){const nm=(p.place||'Sin nombre').trim(),k=nm.toLowerCase();const e=m.get(k)||{name:nm,total:0,n:0};e.total+=p.amount;e.n++;m.set(k,e);});
+  savEvents().forEach(function(p){
+    const nm=(p.place||'Sin nombre').trim(),k=nm.toLowerCase();
+    const e=m.get(k)||{name:nm,total:0,n:0};
+    e.total+=p.amount;e.n++;m.set(k,e);
+  });
   return Array.from(m.values()).sort(function(a,b){return b.total-a.total;});
 }
 function chartPat(){
-  if(!S.pat.length)return '';
-  const months=S.pat.map(function(p){return p.date.slice(0,7);}).sort();
+  const ev=savEvents();
+  if(!ev.length)return '';
+  const months=ev.map(function(p){return p.date.slice(0,7);}).sort();
   const end=months[months.length-1]>curMonth()?months[months.length-1]:curMonth();
   let ms=[],m=months[0];while(m<=end&&ms.length<120){ms.push(m);m=shiftMonth(m,1);}
   ms=ms.slice(-18);
   if(ms.length<2)return '<p class="hint">La evolución aparece cuando tengas ahorros en dos meses distintos.</p>';
-  const vals=ms.map(function(mm){return S.pat.reduce(function(s,p){return p.date.slice(0,7)<=mm?s+p.amount:s;},0);});
+  const vals=ms.map(function(mm){return ev.reduce(function(s,p){return p.date.slice(0,7)<=mm?s+p.amount:s;},0);});
   const mx=niceMax(Math.max.apply(null,vals.concat([1])));
   const W=chartW(),H=210,L=44,R=14,T=22,B=28,iw=W-L-R,ih=H-T-B,base=T+ih,n=ms.length;
   const x=function(i){return L+iw*i/(n-1);},y=function(v){return base-Math.max(0,v)/mx*ih;};
@@ -846,18 +913,206 @@ function chartPat(){
     '<text class="endlbl" x="'+lx.toFixed(1)+'" y="'+Math.max(12,ly-12).toFixed(1)+'" text-anchor="end">'+money(vals[n-1])+'</text>'+lbl+'</svg>';
 }
 function viewPat(){
-  const places=placesAgg(),tot=S.totalSav,mk=curMonth();
-  const added=S.pat.filter(function(p){return p.date.slice(0,7)===mk;}).reduce(function(s,p){return s+p.amount;},0);
-  let h='<div class="stack"><section class="card"><div class="eyebrow">Mis ahorros en total</div><div class="hero-num num">'+money(tot)+'</div><p class="muted">'+(S.pat.length?('En '+places.length+' '+(places.length===1?'lugar':'lugares')+'. En '+monthLabel(mk,true)+' '+(added>=0?'agregaste ':'retiraste ')+'<b class="num">'+money(Math.abs(added))+'</b>.'):'Anota dónde guardas tus ahorros y suma cada vez que tengas un extra.')+'</p></section>';
-  if(!S.pat.length)return h+'<section class="card empty"><p>Todavía no registras ahorros.</p><p style="margin-top:12px"><button type="button" class="btn primary" data-a="new-pat-dep">'+ICON.plus+'Agregar ahorro</button></p></section></div>';
+  const ev=savEvents(),places=placesAgg(),tot=S.totalSav,mk=curMonth();
+  const added=ev.filter(function(p){return p.date.slice(0,7)===mk;}).reduce(function(s,p){return s+p.amount;},0);
+  let h='<div class="stack"><section class="card"><div class="eyebrow">Mis ahorros líquidos</div><div class="hero-num num">'+money(tot)+'</div><p class="muted">'+(ev.length?('En '+places.length+' '+(places.length===1?'lugar':'lugares')+'. En '+monthLabel(mk,true)+' '+(added>=0?'agregaste ':'retiraste ')+'<b class="num">'+money(Math.abs(added))+'</b>.'+(S.totalInvActive>0?' Además tienes <b class="num">'+money(S.totalInvActive)+'</b> colocados en Préstamos e Inversiones.':'')):'Anota dónde guardas tus ahorros y suma cada vez que tengas un extra.')+'</p></section>';
+  if(!ev.length)return h+'<section class="card empty"><p>Todavía no registras ahorros.</p><p style="margin-top:12px"><button type="button" class="btn primary" data-a="new-pat-dep">'+ICON.plus+'Agregar ahorro</button></p></section></div>';
   h+='<div class="grid2"><section class="card chart"><div class="sec-head"><h2>Evolución</h2></div>'+chartPat()+'</section>';
   h+='<section class="card"><div class="sec-head"><h2>Dónde están</h2></div>'+places.map(function(p){
     const share=tot>0?Math.max(0,p.total)/tot:0;
     return '<div class="p-share"><div class="list-row" style="padding:0;border:0"><b>'+esc(p.name)+'</b><b class="num">'+money(p.total)+'</b></div><div class="bar" aria-hidden="true"><i style="width:'+(share*100).toFixed(1)+'%"></i></div><span class="hint">'+pct(share)+' del total</span></div>';
   }).join('')+'</section></div>';
-  h+='<section class="card"><div class="sec-head"><h2>Historial</h2></div>'+S.pat.map(function(p){
-    return '<button type="button" class="mv" data-a="edit-pat" data-id="'+esc(p.id)+'"><span class="dot" style="background:var(--save)"></span><span><span class="mv-title">'+esc(p.place||'Sin nombre')+' <em>· '+(p.amount<0?'Retiro':'Depósito')+'</em></span><span class="mv-meta">'+esc(dayLabel(p.date))+(p.acc?(p.amount<0?' · hacia ':' · desde ')+esc(accName(p.acc)):'')+(p.note?' · '+esc(p.note):'')+'</span></span><span class="mv-amt num '+(p.amount>=0?'in':'')+'">'+money(p.amount,{sign:true})+'</span></button>';
+  h+='<section class="card"><div class="sec-head"><h2>Historial</h2><span class="hint">Toca un retiro para editarlo o convertirlo a Préstamo / Inversión</span></div>'+ev.map(function(p){
+    const isInv=p.kind==='inv';
+    const actAttr=isInv?'edit-inv':'edit-pat';
+    const dotC=isInv?(p.amount>=0?'var(--save)':'var(--need)'):'var(--save)';
+    const subTag=isInv?esc(p.invTag):(p.amount<0?'Retiro':'Depósito');
+    const accTxt=p.acc?(p.amount<0?' · hacia ':' · desde ')+esc(accName(p.acc)):'';
+    return '<button type="button" class="mv" data-a="'+actAttr+'" data-id="'+esc(p.id)+'"><span class="dot" style="background:'+dotC+'"></span><span><span class="mv-title">'+esc(p.place)+' <em>· '+subTag+'</em></span><span class="mv-meta">'+esc(dayLabel(p.date))+accTxt+(p.note?' · '+esc(p.note):'')+'</span></span><span class="mv-amt num '+(p.amount>=0?'in':'')+'">'+money(p.amount,{sign:true})+'</span></button>';
   }).join('')+'</section></div>';
+  return h;
+}
+
+/* ================= Préstamos e Inversiones ================= */
+function invEntitiesAgg(){
+  const m=new Map();
+  S.inv.forEach(function(x){
+    const cat=x.category==='invest'?'invest':'loan';
+    const nm=(x.entity||'Sin nombre').trim();
+    const k=cat+'::'+nm.toLowerCase();
+    let e=m.get(k);
+    if(!e) e={cat:cat,name:nm,invested:0,returned:0,active:0,profit:0,lastDate:'',lastProfitDate:'',n:0,profitCount:0};
+    const amt=Number(x.amount)||0;
+    if(x.action==='out'){e.invested+=amt;e.active+=amt;}
+    else if(x.action==='return'){e.returned+=amt;e.active-=amt;}
+    else if(x.action==='profit'){
+      e.profit+=amt;e.profitCount++;
+      if(x.sourceType==='reinvest'){e.invested+=amt;e.active+=amt;}
+      if(!e.lastProfitDate||x.date>e.lastProfitDate)e.lastProfitDate=x.date;
+    }
+    if(!e.lastDate||x.date>e.lastDate)e.lastDate=x.date;
+    e.n++;
+    m.set(k,e);
+  });
+  return Array.from(m.values()).sort(function(a,b){return b.active-a.active||b.profit-a.profit;});
+}
+
+function invEntitySuggestions(cat){
+  const set=new Map();
+  if(cat==='loan'){
+    ['Alberto','Jeen'].forEach(function(n){set.set(n.toLowerCase(),n);});
+  }
+  S.inv.forEach(function(x){
+    if(x.category===cat&&x.entity){const nm=x.entity.trim();set.set(nm.toLowerCase(),nm);}
+  });
+  return Array.from(set.values());
+}
+
+function chartInvProfits(){
+  const now=curMonth(),ms=[];
+  for(let i=5;i>=0;i--)ms.push(shiftMonth(now,-i));
+  const data=ms.map(function(m){
+    const p=S.inv.filter(function(x){return x.action==='profit'&&x.date.slice(0,7)===m;}).reduce(function(s,x){return s+(Number(x.amount)||0);},0);
+    return {m:m,val:p};
+  });
+  const total6=data.reduce(function(s,d){return s+d.val;},0);
+  if(total6<=0)return '<p class="hint">Cuando registres dividendos o intereses, aquí verás cuánto te generan mes a mes.</p>';
+  const mx=niceMax(Math.max.apply(null,data.map(function(d){return d.val;}).concat([1])));
+  const W=chartW(),H=200,L=44,R=8,T=14,B=28,iw=W-L-R,ih=H-T-B,base=T+ih;
+  const gw=iw/data.length,bw=Math.min(34,gw*0.48);
+  const y=function(v){return base-(v/mx)*ih;};
+  let g='';
+  [0,0.5,1].forEach(function(f){const v=mx*f,yy=y(v);g+='<line class="'+(f===0?'base':'gl')+'" x1="'+L+'" x2="'+(W-R)+'" y1="'+yy.toFixed(1)+'" y2="'+yy.toFixed(1)+'"/><text class="ax" x="'+(L-8)+'" y="'+(yy+4).toFixed(1)+'" text-anchor="end">'+fmtK(v)+'</text>';});
+  let b='';
+  data.forEach(function(d,i){
+    const cx=L+gw*i+gw/2,h=base-y(d.val);
+    if(h>0){
+      const r=Math.min(5,h,bw/2),x0=cx-bw/2;
+      b+='<g><title>'+esc(monthLabel(d.m))+': '+money(d.val)+'</title><path d="M'+x0.toFixed(1)+' '+base+'V'+(base-h+r).toFixed(1)+'a'+r+' '+r+' 0 0 1 '+r+' -'+r+'h'+(bw-2*r).toFixed(1)+'a'+r+' '+r+' 0 0 1 '+r+' '+r+'V'+base+'Z" fill="var(--save)"/></g>';
+    }
+    b+='<text class="ax'+(d.m===now?' sel':'')+'" x="'+cx.toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle">'+esc(monthLabel(d.m,true))+'</text>';
+  });
+  return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Dividendos y ganancias de los últimos 6 meses">'+g+b+'</svg>';
+}
+
+function invActionLabel(x){
+  if(x.action==='out') return x.category==='loan'?'Préstamo entregado':'Capital invertido';
+  if(x.action==='return') return x.category==='loan'?'Devolución de capital':'Retiro de capital';
+  return x.category==='loan'?'Interés / Ganancia':'Dividendo recibido';
+}
+function invRouteLabel(x){
+  if(x.sourceType==='sav') return (x.action==='out'?'desde Ahorros (':'hacia Ahorros (')+(x.savPlace||'Ahorros')+')';
+  if(x.sourceType==='acc') return (x.action==='out'?'desde ':'hacia ')+accName(x.acc);
+  if(x.sourceType==='reinvest') return 'Reinvertido en capital';
+  return 'Registro informativo';
+}
+
+function invListHtml(){
+  const f=S.invFilters;
+  const rows=S.inv.filter(function(x){
+    if(f.cat!=='all'&&x.category!==f.cat)return false;
+    if(f.ent!=='all'&&(x.entity||'').trim().toLowerCase()!==f.ent)return false;
+    return true;
+  });
+  if(!rows.length)return '<p class="empty">No hay movimientos registrados con estos filtros.</p>';
+  let h='';
+  rows.forEach(function(x){
+    const dotC=x.action==='profit'?'var(--save)':(x.action==='return'?'var(--inc)':'var(--need)');
+    const isGain=x.action==='profit'||x.action==='return';
+    const signStr=x.action==='out'?'−':'+';
+    h+='<button type="button" class="mv" data-a="edit-inv" data-id="'+esc(x.id)+'"><span class="dot" style="background:'+dotC+'"></span>'+
+      '<span><span class="mv-title">'+esc(x.entity)+' <em>· '+esc(invActionLabel(x))+'</em></span>'+
+      '<span class="mv-meta">'+esc(shortDate(x.date))+' · '+esc(invRouteLabel(x))+(x.note?' · '+esc(x.note):'')+'</span></span>'+
+      '<span class="mv-amt num '+(isGain?'in':'')+'">'+signStr+money(x.amount)+'</span></button>';
+  });
+  return h;
+}
+
+function viewInv(){
+  const ents=invEntitiesAgg();
+  const loans=ents.filter(function(e){return e.cat==='loan';});
+  const invs=ents.filter(function(e){return e.cat==='invest';});
+  const totalLoanActive=loans.reduce(function(s,e){return s+e.active;},0);
+  const totalInvOnlyActive=invs.reduce(function(s,e){return s+e.active;},0);
+  const totalInvestedAll=ents.reduce(function(s,e){return s+e.invested;},0);
+  const mk=curMonth();
+  const monthProfit=S.inv.filter(function(x){return x.action==='profit'&&x.date.slice(0,7)===mk;}).reduce(function(s,x){return s+(Number(x.amount)||0);},0);
+  const retirosAhorros=S.pat.filter(function(p){return p.amount<0;}).length;
+
+  let h='<div class="stack">';
+  h+='<section class="card hero"><div><div class="eyebrow">Capital activo en préstamos e inversiones</div>'+
+    '<div class="hero-num num">'+money(S.totalInvActive)+'</div>'+
+    '<p class="muted">Patrimonio total sumando cuentas, ahorros e inversiones: <b class="num">'+money(S.totalCash+S.totalSav+S.totalInvActive)+'</b>.</p></div>'+
+    '<dl class="stats">'+
+    '<div class="stat"><dt><span class="dot" style="background:var(--want)"></span>Préstamos por cobrar</dt><dd class="num">'+money(totalLoanActive)+'</dd></div>'+
+    '<div class="stat"><dt><span class="dot" style="background:var(--need)"></span>Capital invertido</dt><dd class="num">'+money(totalInvOnlyActive)+'</dd></div>'+
+    '<div class="stat"><dt><span class="dot" style="background:var(--save)"></span>Dividendos / Ganancias</dt><dd class="num">'+money(S.totalInvProfit)+'</dd>'+(monthProfit>0?'<span class="delta good">+'+money(monthProfit)+' este mes</span>':'')+'</div>'+
+    '<div class="stat"><dt>Retorno acumulado</dt><dd class="num">'+(totalInvestedAll>0?pct(S.totalInvProfit/totalInvestedAll):'0%')+'</dd></div></dl></section>';
+
+  if(retirosAhorros>0){
+    h+='<div class="banner"><span>¿Tienes retiros de estos días en <b>Ahorros</b> que fueron para préstamos o inversiones? Ábrelos en Ahorros y usa «Convertir a Préstamo / Inv.».</span><button type="button" class="btn small" data-a="tab" data-v="patrimonio">Ir a Ahorros</button></div>';
+  }
+
+  // Sección 1: Préstamos
+  h+='<div><div class="sec-head"><h2>Préstamos personales</h2><button type="button" class="btn small" data-a="quick-inv" data-cat="loan" data-act="out" data-ent="">'+ICON.plus+'Nuevo préstamo</button></div>';
+  if(loans.length){
+    h+='<div class="inv-grid">'+loans.map(function(e){
+      const done=e.active<=0.005;
+      const recPct=e.invested>0?Math.min(100,Math.max(0,(e.returned/e.invested)*100)):0;
+      return '<article class="inv-card"><header><h3>'+esc(e.name)+'</h3><span class="tag '+(done?'ok':'warn')+'">'+(done?'Liquidado':'Por cobrar')+'</span></header>'+
+        '<div class="acc-bal num">'+money(e.active)+'</div>'+
+        '<div class="hint">Prestado: <b class="num">'+money(e.invested)+'</b> · Recuperado: <b class="num">'+money(e.returned)+'</b>'+(e.profit>0?' · Intereses: <b class="num">'+money(e.profit)+'</b>':'')+'</div>'+
+        '<div class="bud"><span>Recuperado '+Math.round(recPct)+'%</span><span class="meter"><i style="width:'+recPct.toFixed(1)+'%"></i></span></div>'+
+        '<div class="hint">Último mov: '+esc(shortDate(e.lastDate))+'</div>'+
+        '<div class="inv-acts"><button type="button" class="btn small" data-a="quick-inv" data-cat="loan" data-act="out" data-ent="'+esc(e.name)+'">+ Prestar</button>'+
+        '<button type="button" class="btn small primary" data-a="quick-inv" data-cat="loan" data-act="return" data-ent="'+esc(e.name)+'">✓ Cobrar pago</button></div></article>';
+    }).join('')+'</div>';
+  } else {
+    h+='<section class="card"><p class="muted" style="margin-bottom:12px">Aún no registras préstamos aquí. Empieza en un clic con tus contactos frecuentes:</p>'+
+      '<div class="actions"><button type="button" class="btn small primary" data-a="quick-inv" data-cat="loan" data-act="out" data-ent="Alberto">+ Préstamo a Alberto</button>'+
+      '<button type="button" class="btn small primary" data-a="quick-inv" data-cat="loan" data-act="out" data-ent="Jeen">+ Préstamo a Jeen</button>'+
+      '<button type="button" class="btn small" data-a="quick-inv" data-cat="loan" data-act="out" data-ent="">+ Otra persona</button></div></section>';
+  }
+  h+='</div>';
+
+  // Sección 2: Inversiones con dividendos
+  h+='<div><div class="sec-head"><h2>Inversiones y dividendos</h2><button type="button" class="btn small" data-a="quick-inv" data-cat="invest" data-act="out" data-ent="">'+ICON.plus+'Nueva inversión</button></div>';
+  if(invs.length){
+    h+='<div class="inv-grid">'+invs.map(function(e){
+      const done=e.active<=0.005;
+      const roi=e.invested>0?pct(e.profit/e.invested):'0%';
+      return '<article class="inv-card"><header><h3>'+esc(e.name)+'</h3><span class="tag '+(done?'info':'ok')+'">'+(done?'Cerrada':'Activa · ROI '+roi)+'</span></header>'+
+        '<div class="acc-bal num">'+money(e.active)+'</div>'+
+        '<div class="hint">Dividendos ganados: <b class="num" style="color:var(--good-text)">+'+money(e.profit)+'</b> ('+e.profitCount+(e.profitCount===1?' pago':' pagos')+')</div>'+
+        '<div class="hint">Capital total puesto: '+money(e.invested)+(e.returned>0?' · Retirado: '+money(e.returned):'')+'</div>'+
+        '<div class="hint">'+(e.lastProfitDate?'Último dividendo: '+esc(shortDate(e.lastProfitDate)):'Sin dividendos registrados aún')+'</div>'+
+        '<div class="inv-acts"><button type="button" class="btn small primary" data-a="quick-inv" data-cat="invest" data-act="profit" data-ent="'+esc(e.name)+'">💵 Dividendo</button>'+
+        '<button type="button" class="btn small" data-a="quick-inv" data-cat="invest" data-act="out" data-ent="'+esc(e.name)+'">+ Invertir</button>'+
+        '<button type="button" class="btn small" data-a="quick-inv" data-cat="invest" data-act="return" data-ent="'+esc(e.name)+'">↩ Retirar</button></div></article>';
+    }).join('')+'</div>';
+  } else {
+    h+='<section class="card"><p class="muted" style="margin-bottom:12px">Registra el capital que pusiste en tu empresa o inversión y lleva el control semanal o mensual de tus dividendos.</p>'+
+      '<div class="actions"><button type="button" class="btn small primary" data-a="quick-inv" data-cat="invest" data-act="out" data-ent="">+ Registrar inversión</button>'+
+      '<button type="button" class="btn small" data-a="quick-inv" data-cat="invest" data-act="profit" data-ent="">💵 Registrar dividendo</button></div></section>';
+  }
+  h+='</div>';
+
+  // Gráfico de dividendos
+  if(S.inv.length){
+    h+='<section class="card chart"><div class="sec-head"><h2>Dividendos y ganancias (últimos 6 meses)</h2><span class="muted num">'+money(S.totalInvProfit)+' total</span></div>'+chartInvProfits()+'</section>';
+  }
+
+  // Historial filtrable
+  const f=S.invFilters;
+  const fBtn=function(v,l){return '<button type="button" data-a="flt-inv-cat" data-v="'+v+'" aria-pressed="'+(f.cat===v)+'">'+l+'</button>';};
+  const entNames=Array.from(new Map(S.inv.map(function(x){const n=(x.entity||'').trim();return [n.toLowerCase(),n];})).entries());
+  const entOpts='<option value="all">Todas las personas y empresas</option>'+entNames.map(function(p){return '<option value="'+esc(p[0])+'"'+(f.ent===p[0]?' selected':'')+'>'+esc(p[1])+'</option>';}).join('');
+  h+='<section class="card"><div class="sec-head"><h2>Trazabilidad de movimientos</h2><span class="hint">Toca cualquier registro para editarlo</span></div>'+
+    '<div class="filters"><div class="seg" role="group" aria-label="Categoría">'+fBtn('all','Todos')+fBtn('loan','Préstamos')+fBtn('invest','Inversiones')+'</div>'+
+    '<select id="f-inv-ent" aria-label="Persona o empresa">'+entOpts+'</select></div>'+
+    '<div id="invlist">'+invListHtml()+'</div></section>';
+
+  h+='</div>';
   return h;
 }
 
@@ -869,7 +1124,7 @@ function viewConceptos(){
     return '<div class="cp"><span><b>'+esc(c.name)+'</b> <span class="kind">'+(c.kind==='want'?'Deseo':'Necesidad')+'</span>'+(c.budget>0?' <span class="hint">· límite '+money(c.budget)+'</span>':'')+'</span><button type="button" class="icon-btn" data-a="edit-cpt" data-t="out" data-id="'+esc(c.id)+'" aria-label="Editar '+esc(c.name)+'">'+ICON.pencil+'</button>'+
       (c.subs.length?'<div class="chips">'+c.subs.map(function(s){return '<span class="chip">'+esc(s.name)+'</span>';}).join('')+'</div>':'')+'</div>';
   }).join('')||'<p class="empty">Sin conceptos de egreso.</p>';
-  return '<div class="stack"><p class="hint">Aquí cambias los nombres de tus conceptos, agregas nuevos o eliminas los que ya no usas. Los movimientos ya registrados conservan su concepto. Mis ahorros en total se calcula solo desde Ahorros.</p><div class="cp-cols">'+
+  return '<div class="stack"><p class="hint">Aquí cambias los nombres de tus conceptos, agregas nuevos o eliminas los que ya no usas. Los movimientos ya registrados conservan su concepto.</p><div class="cp-cols">'+
     '<section class="card"><div class="sec-head"><h2>Ingresos</h2><button type="button" class="btn small" data-a="new-cpt" data-t="in">'+ICON.plus+'Agregar</button></div>'+inc+'</section>'+
     '<section class="card"><div class="sec-head"><h2>Egresos</h2><button type="button" class="btn small" data-a="new-cpt" data-t="out">'+ICON.plus+'Agregar</button></div>'+exp+'</section></div></div>';
 }
@@ -878,7 +1133,7 @@ function renderAll(){renderChrome();renderView();}
 function renderChrome(){
   const locked = Store.locked;
   $('#tabs').hidden = locked;
-  $('#tabs').innerHTML=locked?'':TABS.map(function(t){return '<button type="button" class="tab" data-a="tab" data-v="'+t[0]+'"'+(S.tab===t[0]?' aria-current="page"':'')+'>'+t[2]+'<span>'+t[1]+'</span></button>';}).join('');
+  $('#tabs').innerHTML=locked?'':TABS.map(function(t){return '<button type="button" class="tab" data-a="tab" data-v="'+t[0]+'"'+(S.tab===t[0]?' aria-current="page"':'')+'>'+t[3]+'<span class="t-full">'+t[1]+'</span><span class="t-short">'+t[2]+'</span></button>';}).join('');
   const showM=!locked&&(S.tab==='resumen'||S.tab==='movs');
   $('#monthnav').hidden=!showM;
   $('#monthlabel').textContent=monthLabel(S.month);
@@ -887,17 +1142,18 @@ function renderChrome(){
   if(!locked && S.demo)b+='<div class="banner"><span>Estás viendo datos de ejemplo. Nada se guarda.</span><button type="button" class="btn small" data-a="demo-off">Salir del ejemplo</button></div>';
   if(!locked && Store.error)b+='<div class="banner bad"><span>Error con Google Sheets: '+esc(Store.error.message||Store.error)+'</span><button type="button" class="btn small" data-a="cfg-url">Opciones</button></div>';
   $('#banners').innerHTML=b;
-  const fab=$('#fab'), fabPat=$('#fab-pat');
-  const isPat=S.tab==='patrimonio';
-  fab.hidden=locked||!Store.ready||S.tab==='conceptos'||isPat;
+  const fab=$('#fab'), fabPat=$('#fab-pat'), fabInv=$('#fab-inv');
+  const isPat=S.tab==='patrimonio', isInv=S.tab==='inversiones';
+  fab.hidden=locked||!Store.ready||S.tab==='conceptos'||isPat||isInv;
   fab.innerHTML=ICON.plus+'Registrar';
-  if(fabPat) fabPat.hidden=locked||!Store.ready||!isPat||!S.pat.length;
+  if(fabPat) fabPat.hidden=locked||!Store.ready||!isPat||!savEvents().length;
+  if(fabInv) fabInv.hidden=locked||!Store.ready||!isInv;
 }
 function renderView(){
   const v=$('#view');
   if(Store.locked){v.innerHTML=lockScreenHtml();return;}
   if(!Store.ready){v.innerHTML='<section class="card"><h2>Cargando tus finanzas…</h2><p class="muted" style="margin-top:6px">Aquí verás tu balance, tus cuentas y en qué gastas.</p></section>';return;}
-  const html=S.tab==='resumen'?viewResumen():S.tab==='movs'?viewMovs():S.tab==='cuentas'?viewCuentas():S.tab==='patrimonio'?viewPat():viewConceptos();
+  const html=S.tab==='resumen'?viewResumen():S.tab==='movs'?viewMovs():S.tab==='cuentas'?viewCuentas():S.tab==='patrimonio'?viewPat():S.tab==='inversiones'?viewInv():viewConceptos();
   v.innerHTML=html;
 }
 
@@ -922,6 +1178,7 @@ function loadPref(){try{const p=JSON.parse(lsGet(PREF_KEY)||'{}');S.prefAcc=p.ac
 function defaultAcc(){return S.cfg.accounts.some(function(a){return a.id===S.prefAcc;})?S.prefAcc:(S.cfg.accounts[0]?S.cfg.accounts[0].id:'');}
 function subOpts(subs,sel){return '<option value="">Sin detalle</option>'+subs.map(function(s){return '<option value="'+esc(s.id)+'"'+(s.id===sel?' selected':'')+'>'+esc(s.name)+'</option>';}).join('');}
 function subsOf(type,cat){const c=findCat(type,cat);return c&&c.subs?c.subs:[];}
+
 function txFormHtml(v){
   const isTr=v.type==='tr';
   const catOpts='<option value="">Elige un concepto…</option>'+catList(v.type).map(function(c){return '<option value="'+esc(c.id)+'"'+(c.id===v.cat?' selected':'')+'>'+esc(c.name)+'</option>';}).join('');
@@ -979,10 +1236,14 @@ function saveTx(again){
   return true;
 }
 
+/* ================= Formulario de Ahorros ================= */
 function patFormHtml(v){
   const places=placesAgg();
   const isRet=v.type==='ret';
-  return '<form id="sheet-form" novalidate autocomplete="off"><div class="seg seg-full" role="radiogroup" aria-label="Tipo">'+
+  const canConvert=!!(S.sheet&&S.sheet.id&&isRet);
+  return '<form id="sheet-form" novalidate autocomplete="off">'+
+    (canConvert?'<div class="banner" style="margin:0"><span style="font-size:13px">¿Este retiro fue un <b>préstamo</b> o <b>inversión</b>?</span><button type="button" class="btn small primary" data-a="pat-to-inv">Convertir a Préstamo / Inv.</button></div>':'')+
+    '<div class="seg seg-full" role="radiogroup" aria-label="Tipo">'+
     '<input type="radio" name="pt-type" id="pt-dep" value="dep"'+(isRet?'':' checked')+'><label for="pt-dep">Depósito</label>'+
     '<input type="radio" name="pt-type" id="pt-ret" value="ret"'+(isRet?' checked':'')+'><label for="pt-ret">Retiro</label></div>'+
     '<div class="row2"><div class="field"><label for="pt-amt">Monto (S/)</label><input id="pt-amt" inputmode="decimal" placeholder="0.00" value="'+esc(v.amt)+'"></div>'+
@@ -1014,9 +1275,102 @@ function savePat(){
   put(S.sheet.id||('p'+uid()),doc);closeSheet();toast(isNew?(ret?'Retiro registrado':'Ahorro agregado'):'Ahorro actualizado');return true;
 }
 
+/* ================= Formulario de Préstamos e Inversiones ================= */
+function invFormHtml(v){
+  const isLoan=v.cat==='loan';
+  const isOut=v.act==='out', isProfit=v.act==='profit';
+  const places=placesAgg();
+  const sugs=invEntitySuggestions(v.cat);
+  const srcOpts=isOut
+    ? [['sav','Desde mis Ahorros'],['acc','Desde una cuenta personal'],['none','Solo registrar (no descontar de saldos)']]
+    : isProfit
+      ? [['sav','Dejar en mis Ahorros'],['acc','Mover a una cuenta personal'],['reinvest','Reinvertir aquí mismo (suma al capital)'],['none','Solo registrar (sin afectar saldos)']]
+      : [['sav','Devolver a mis Ahorros'],['acc','Mover a una cuenta personal'],['none','Solo registrar (sin afectar saldos)']];
+  if(!srcOpts.some(function(o){return o[0]===v.src;})) v.src=srcOpts[0][0];
+
+  const srcLbl=isOut?'¿De dónde sale el dinero?':(isProfit?'¿Dónde recibes esta ganancia / dividendo?':'¿Dónde recibes la devolución?');
+  const actLabels=isLoan
+    ? [['out','Prestar'],['return','Cobro capital'],['profit','Interés']]
+    : [['out','Invertir'],['return','Retirar capital'],['profit','Dividendo']];
+
+  return '<form id="sheet-form" novalidate autocomplete="off">'+
+    (S.sheet&&S.sheet.convertFromPatId?'<div class="banner" style="margin:0;font-size:13px">Al guardar, este registro reemplazará el retiro original de Ahorros sin descontar tu saldo dos veces.</div>':'')+
+    '<div class="seg seg-full" role="radiogroup" aria-label="Categoría">'+
+      '<input type="radio" name="inv-cat" id="ic-loan" value="loan"'+(isLoan?' checked':'')+'><label for="ic-loan">Préstamo</label>'+
+      '<input type="radio" name="inv-cat" id="ic-invest" value="invest"'+(isLoan?'':' checked')+'><label for="ic-invest">Inversión</label></div>'+
+    '<div class="seg seg-full" role="radiogroup" aria-label="Tipo de movimiento">'+
+      actLabels.map(function(a){return '<input type="radio" name="inv-act" id="ia-'+a[0]+'" value="'+a[0]+'"'+(v.act===a[0]?' checked':'')+'><label for="ia-'+a[0]+'">'+a[1]+'</label>';}).join('')+'</div>'+
+    '<div class="field"><label for="inv-ent">'+(isLoan?'¿A quién le prestas / quién paga?':'Nombre de la empresa o inversión')+'</label>'+
+      '<input id="inv-ent" list="inv-ents" maxlength="60" placeholder="'+(isLoan?'Ej. Alberto, Jeen':'Ej. Empresa de dividendos')+'" value="'+esc(v.entity)+'">'+
+      '<datalist id="inv-ents">'+sugs.map(function(n){return '<option value="'+esc(n)+'">';}).join('')+'</datalist></div>'+
+    '<div class="row2"><div class="field"><label for="inv-amt">Monto (S/)</label><input id="inv-amt" inputmode="decimal" placeholder="0.00" value="'+esc(v.amt)+'"></div>'+
+    '<div class="field"><label for="inv-date">Fecha</label><input id="inv-date" type="date" value="'+esc(v.date)+'"></div></div>'+
+    '<div class="field"><label for="inv-src">'+srcLbl+'</label><select id="inv-src">'+
+      srcOpts.map(function(o){return '<option value="'+o[0]+'"'+(v.src===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('')+'</select></div>'+
+    (v.src==='sav'?('<div class="field"><label for="inv-sav">'+(isOut?'Lugar de Ahorros de origen':'Lugar de Ahorros destino')+'</label><input id="inv-sav" list="inv-savs" maxlength="60" placeholder="Ej. Cuenta de ahorros BCP" value="'+esc(v.savPlace)+'"><datalist id="inv-savs">'+places.map(function(p){return '<option value="'+esc(p.name)+'">';}).join('')+'</datalist></div>'):'')+
+    (v.src==='acc'?('<div class="field"><label for="inv-acc">'+(isOut?'Cuenta personal de origen':'Cuenta personal destino')+'</label><select id="inv-acc">'+accOptions(v.acc)+'</select></div>'):'')+
+    '<div class="field"><label for="inv-note">Nota (opcional)</label><input id="inv-note" maxlength="120" placeholder="'+(isProfit?'Ej. Dividendo semana 4':'Ej. Pago acordado fin de mes')+'" value="'+esc(v.note)+'"></div>'+
+    '<p class="err" id="sheet-err" role="alert" hidden></p>'+
+    '<div class="actions"><button type="submit" class="btn primary grow">Guardar</button></div>'+
+    (S.sheet&&S.sheet.id?delBlock('este movimiento'):'')+'</form>';
+}
+
+function invValues(){
+  const g=function(id){const e=$('#'+id);return e?e.value:'';};
+  const rc=$('input[name="inv-cat"]:checked'), ra=$('input[name="inv-act"]:checked');
+  return {
+    cat: rc?rc.value:'loan',
+    act: ra?ra.value:'out',
+    entity: g('inv-ent'),
+    amt: g('inv-amt'),
+    date: g('inv-date')||todayStr(),
+    src: g('inv-src')||'sav',
+    savPlace: g('inv-sav')||(placesAgg()[0]||{}).name||'',
+    acc: g('inv-acc')||defaultAcc(),
+    note: g('inv-note')
+  };
+}
+
+function openInv(x,preset){
+  loadPref();
+  const pr=preset||{};
+  let v;
+  if(x){
+    v={cat:x.category||'loan',act:x.action||'out',entity:x.entity||'',amt:String(x.amount),date:x.date,src:x.sourceType||'sav',savPlace:x.savPlace||(placesAgg()[0]||{}).name||'',acc:x.acc||defaultAcc(),note:x.note||''};
+  } else {
+    v={cat:pr.cat||'loan',act:pr.act||'out',entity:pr.entity||'',amt:pr.amt||'',date:pr.date||todayStr(),src:pr.src||'sav',savPlace:pr.savPlace||(placesAgg()[0]||{}).name||'',acc:pr.acc||defaultAcc(),note:pr.note||''};
+  }
+  S.sheet={kind:'inv',id:x?x.id:null,ts:x?x.ts:null,convertFromPatId:pr.convertFromPatId||null};
+  const title=x?'Editar movimiento':(pr.convertFromPatId?'Convertir retiro a Préstamo / Inv.':(v.act==='out'?'Registrar Préstamo / Inversión':'Registrar Cobro / Dividendo'));
+  openSheet('inv',title,'',S.sheet,null);
+  $('#sheet-body').innerHTML=invFormHtml(v);
+  setTimeout(function(){const f=v.entity?$('#inv-amt'):$('#inv-ent');if(f)f.focus();},50);
+}
+
+function saveInv(){
+  const v=invValues();
+  const entity=v.entity.trim(), amount=parseAmount(v.amt);
+  if(!entity)return fail(v.cat==='loan'?'Escribe el nombre de la persona (ej. Alberto, Jeen).':'Escribe el nombre de la empresa o inversión.');
+  if(!(amount>0))return fail('Escribe un monto mayor a 0.');
+  if(!v.date)return fail('Elige una fecha.');
+  if(v.src==='sav'&&!v.savPlace.trim())return fail('Indica el lugar de Ahorros.');
+  if(v.src==='acc'&&!v.acc)return fail('Elige una cuenta personal.');
+  const doc={k:'inv',category:v.cat,action:v.act,entity:entity,amount:amount,date:v.date,sourceType:v.src,note:v.note.trim(),ts:S.sheet.ts||Date.now()};
+  if(v.src==='sav') doc.savPlace=v.savPlace.trim();
+  if(v.src==='acc') doc.acc=v.acc;
+  const oldPatId=S.sheet.convertFromPatId;
+  const isNew=!S.sheet.id;
+  put(S.sheet.id||('i'+uid()),doc);
+  if(oldPatId) del(oldPatId);
+  closeSheet();
+  toast(oldPatId?'Retiro convertido correctamente':(isNew?'Movimiento guardado':'Movimiento actualizado'));
+  return true;
+}
+
+/* ================= Cuentas, Tarjetas, Conceptos ================= */
 function openAcc(a){
   S.sheet={kind:'acc',id:a?a.id:null};
-  const used=a&&(S.tx.some(function(t){return t.acc===a.id||t.to===a.id;})||S.pat.some(function(p){return p.acc===a.id;}));
+  const used=a&&(S.tx.some(function(t){return t.acc===a.id||t.to===a.id;})||S.pat.some(function(p){return p.acc===a.id;})||S.inv.some(function(x){return x.acc===a.id;}));
   const html='<form id="sheet-form" novalidate autocomplete="off"><div class="field"><label for="ac-name">Nombre de la cuenta</label><input id="ac-name" maxlength="40" value="'+esc(a?a.name:'')+'" placeholder="Ej. Scotiabank"></div>'+
     '<div class="field"><label for="ac-init">Saldo con el que empiezas (S/)</label><input id="ac-init" inputmode="decimal" value="'+esc(a&&a.initial?String(a.initial):'')+'" placeholder="0.00"><span class="hint">Lo que tienes hoy en esta cuenta, antes de registrar movimientos.</span></div>'+
     '<p class="err" id="sheet-err" role="alert" hidden></p><div class="actions"><button type="submit" class="btn primary grow">Guardar</button></div>'+
@@ -1096,6 +1450,7 @@ function doDelete(){
   const s=S.sheet;if(!s||!s.id)return;
   if(s.kind==='tx'){del(s.id);}
   else if(s.kind==='pat'){del(s.id);}
+  else if(s.kind==='inv'){del(s.id);}
   else if(s.kind==='acc'){editCfg(function(c){c.accounts=c.accounts.filter(function(a){return a.id!==s.id;});});}
   else if(s.kind==='card'){editCfg(function(c){c.cards=c.cards.filter(function(a){return a.id!==s.id;});});}
   else if(s.kind==='cpt'){editCfg(function(c){if(s.type==='in')c.income=c.income.filter(function(a){return a.id!==s.id;});else c.expense=c.expense.filter(function(a){return a.id!==s.id;});});}
@@ -1148,10 +1503,14 @@ function buildDemo(){
     const m=shiftMonth(now,p[0]);const day=p[0]===0?Math.min(5,today):5;
     docs.set('p'+i,{k:'pat',date:m+'-'+pad(day),amount:p[2],place:p[1],note:'',ts:2000+i});
   });
+  docs.set('i1',{k:'inv',category:'loan',action:'out',entity:'Alberto',amount:500,date:shiftMonth(now,-1)+'-10',sourceType:'sav',savPlace:'Cuenta de ahorros BCP',note:'Préstamo personal',ts:3001});
+  docs.set('i2',{k:'inv',category:'loan',action:'out',entity:'Jeen',amount:300,date:now+'-03',sourceType:'sav',savPlace:'Cuenta de ahorros BCP',note:'',ts:3002});
+  docs.set('i3',{k:'inv',category:'invest',action:'out',entity:'Empresa',amount:1000,date:shiftMonth(now,-2)+'-05',sourceType:'sav',savPlace:'Fondo mutuo',note:'Aporte inicial',ts:3003});
+  docs.set('i4',{k:'inv',category:'invest',action:'profit',entity:'Empresa',amount:120,date:shiftMonth(now,-1)+'-28',sourceType:'acc',acc:'bbva',note:'Dividendo mensual',ts:3004});
   return docs;
 }
 
-const WRITE_ACTIONS={'new':1,'new-pat-dep':1,'new-pat-ret':1,'edit-tx':1,'edit-pat':1,'new-acc':1,'edit-acc':1,'new-card':1,'edit-card':1,'new-cpt':1,'edit-cpt':1,'adjust':1};
+const WRITE_ACTIONS={'new':1,'new-pat-dep':1,'new-pat-ret':1,'new-inv-out':1,'new-inv-in':1,'quick-inv':1,'pat-to-inv':1,'edit-tx':1,'edit-pat':1,'edit-inv':1,'new-acc':1,'edit-acc':1,'new-card':1,'edit-card':1,'new-cpt':1,'edit-cpt':1,'adjust':1};
 document.addEventListener('click',function(e){
   const ov=$('#overlay');
   if(e.target===ov){closeSheet();return;}
@@ -1177,11 +1536,20 @@ document.addEventListener('click',function(e){
     case 'prev':S.month=shiftMonth(S.month,-1);renderAll();break;
     case 'next':S.month=shiftMonth(S.month,1);renderAll();break;
     case 'today':S.month=curMonth();renderAll();break;
-    case 'new':if(S.tab==='patrimonio')openPat(null,'dep');else openTx(null);break;
+    case 'new':if(S.tab==='patrimonio')openPat(null,'dep');else if(S.tab==='inversiones')openInv(null,{act:'out'});else openTx(null);break;
     case 'new-pat-dep':openPat(null,'dep');break;
     case 'new-pat-ret':openPat(null,'ret');break;
+    case 'new-inv-out':openInv(null,{cat:'loan',act:'out'});break;
+    case 'new-inv-in':openInv(null,{cat:'invest',act:'profit'});break;
+    case 'quick-inv':openInv(null,{cat:el.dataset.cat,act:el.dataset.act,entity:el.dataset.ent});break;
+    case 'pat-to-inv':{
+      const p=S.pat.find(function(x){return x.id===S.sheet.id;});
+      if(p) openInv(null,{convertFromPatId:p.id,cat:'loan',act:'out',amt:String(Math.abs(p.amount)),date:p.date,src:'sav',savPlace:p.place||'',note:p.note||''});
+      break;
+    }
     case 'edit-tx':openTx(S.tx.find(function(t){return t.id===id;}));break;
     case 'edit-pat':openPat(S.pat.find(function(p){return p.id===id;}));break;
+    case 'edit-inv':openInv(S.inv.find(function(x){return x.id===id;}));break;
     case 'new-acc':openAcc(null);break;
     case 'edit-acc':openAcc(S.cfg.accounts.find(function(x){return x.id===id;}));break;
     case 'new-card':openCard(null);break;
@@ -1190,6 +1558,7 @@ document.addEventListener('click',function(e){
     case 'edit-cpt':openCpt(el.dataset.t,catList(el.dataset.t).find(function(x){return x.id===id;}));break;
     case 'toggle-cat':S.expanded[id]=!S.expanded[id];renderView();break;
     case 'flt-type':S.filters.type=el.dataset.v;renderView();break;
+    case 'flt-inv-cat':S.invFilters.cat=el.dataset.v;renderView();break;
     case 'close':closeSheet();break;
     case 'save-again':saveTx(true);break;
     case 'del-ask':el.hidden=true;$('#del-confirm').hidden=false;break;
@@ -1204,6 +1573,11 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('change',function(e){
   const t=e.target;
+  if((t.name==='inv-cat'||t.name==='inv-act'||t.id==='inv-src')&&S.sheet&&S.sheet.kind==='inv'){
+    const v=invValues();
+    $('#sheet-body').innerHTML=invFormHtml(v);
+    return;
+  }
   if(t.name==='pt-type'&&S.sheet&&S.sheet.kind==='pat'){
     const isRet=t.value==='ret';
     const pl=$('#pt-place-lbl');if(pl)pl.textContent=isRet?'¿De dónde lo retiras?':'¿Dónde lo guardas?';
@@ -1224,6 +1598,7 @@ document.addEventListener('change',function(e){
   }
   if(t.id==='f-acc'){S.filters.acc=t.value;$('#movlist').innerHTML=movListHtml();}
   if(t.id==='f-cat'){S.filters.cat=t.value;$('#movlist').innerHTML=movListHtml();}
+  if(t.id==='f-inv-ent'){S.invFilters.ent=t.value;$('#invlist').innerHTML=invListHtml();}
 });
 document.addEventListener('input',function(e){
   const t=e.target;
@@ -1248,10 +1623,10 @@ document.addEventListener('submit',function(e){
   if(e.target.id!=='sheet-form')return;
   e.preventDefault();
   const k=S.sheet&&S.sheet.kind;
-  if(k==='tx')saveTx(false);else if(k==='pat')savePat();else if(k==='acc')saveAcc();else if(k==='card')saveCard();else if(k==='cpt')saveCpt();
+  if(k==='tx')saveTx(false);else if(k==='pat')savePat();else if(k==='inv')saveInv();else if(k==='acc')saveAcc();else if(k==='card')saveCard();else if(k==='cpt')saveCpt();
 });
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&S.sheet)closeSheet();});
-let rt,lastW=window.innerWidth;window.addEventListener('resize',function(){if(window.innerWidth===lastW)return;lastW=window.innerWidth;clearTimeout(rt);rt=setTimeout(function(){if(!Store.locked&&Store.ready&&(S.tab==='resumen'||S.tab==='patrimonio'))renderView();},150);});
+let rt,lastW=window.innerWidth;window.addEventListener('resize',function(){if(window.innerWidth===lastW)return;lastW=window.innerWidth;clearTimeout(rt);rt=setTimeout(function(){if(!Store.locked&&Store.ready&&(S.tab==='resumen'||S.tab==='patrimonio'||S.tab==='inversiones'))renderView();},150);});
 
 loadPref();
 initStore();
